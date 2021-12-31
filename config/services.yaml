@@ -6,6 +6,7 @@
 parameters:
     locale: 'en'
     uploads_dir: '%kernel.project_dir%/public/uploads/'
+    admin_email: email@admin.com
 
 services:
     # default configuration for services in *this* file
@@ -22,7 +23,16 @@ services:
             - '../src/Kernel.php'
             - '../src/Tests/'
 
-    
+    App\Controller\:
+        resource: '../src/Controller'
+        tags: ['controller.service_arguments']
+
+    # custom_file_uploader:
+    #     class: App\Services\FileUploader
+
+    App\Services\Notification:
+        arguments:
+            - '%admin_email%'
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

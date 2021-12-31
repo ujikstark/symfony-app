@@ -5,7 +5,10 @@ namespace App\Controller;
 use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
+use App\Services\FileUploader;
+use App\Services\Notification;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,7 +27,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/create', name: 'create')]
-    public function create(Request $request) {
+    public function create(Request $request, FileUploader $fileUploader, Notification $notification) {
         // create a new post with title
         $post = new Post();
 
@@ -40,13 +43,8 @@ class PostController extends AbstractController
             /** @var UploadedFile $file */
             $file = $request->files->get('post')['attachment'];
             if ($file) {
-                $fileName = md5(uniqid() . '.' . $file->guessClientExtension());
-
-                $file->move(
-                    // TODO: get target directory ,
-                    $this->getParameter('uploads_dir'),
-                    $fileName
-                );
+                
+                $fileName = $fileUploader->uploadFile($file);
 
                 $post->setImage($fileName);
                 $em->persist($post);
@@ -66,7 +64,7 @@ class PostController extends AbstractController
 
     #[Route('/show/{id}', name: 'show')]
     public function show(Post $post) {
-        
+
         // create the show view
         return $this->render('post/show.html.twig', [
             'post' => $post
