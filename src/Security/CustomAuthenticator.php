@@ -28,6 +28,11 @@ class CustomAuthenticator extends AbstractLoginFormAuthenticator
         $this->urlGenerator = $urlGenerator;
     }
 
+    // public function supports(Request $request): bool
+    // {
+    //     return $request->headers->has('Authorization');
+    // }
+
     public function authenticate(Request $request): Passport
     {
         $username = $request->request->get('username', '');

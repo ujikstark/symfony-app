@@ -17,14 +17,35 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
+
+        login:
+            pattern: ^/web_login
+            stateless: true
+            provider: app_user_provider
+            form_login:
+                check_path: /web_login_check 
+                username_parameter: username
+                password_parameter: password
+                enable_csrf: true    
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
+        # api:
+        #     pattern: ^/api
+        #     stateless: true
+        #     jwt: ~
+
+        post:
+            pattern: ^/post
+            stateless: true
+            jwt: ~
+
         main:
             lazy: true
             provider: app_user_provider
-            custom_authenticator: App\Security\CustomAuthenticator
+            # custom_authenticator: App\Security\CustomAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -35,7 +56,11 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/post/create, roles: ROLE_USER}
+        - { path: ^/post, roles: PUBLIC_ACCESS}
+        - { path: ^/api/login, roles: PUBLIC_ACCESS }
+        - { path: ^/api,       roles: IS_AUTHENTICATED_FULLY }
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

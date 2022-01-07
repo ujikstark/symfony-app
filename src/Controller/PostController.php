@@ -6,7 +6,7 @@ use App\Entity\Post;
 use App\Form\PostType;
 use App\Repository\PostRepository;
 use App\Services\FileUploader;
-use App\Services\Notification;
+// use App\Services\Notification;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -27,7 +27,7 @@ class PostController extends AbstractController
     }
 
     #[Route('/create', name: 'create')]
-    public function create(Request $request, FileUploader $fileUploader, Notification $notification) {
+    public function create(Request $request, FileUploader $fileUploader) {
         // create a new post with title
         $post = new Post();
 
@@ -61,6 +61,8 @@ class PostController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+    
+    
 
     #[Route('/show/{id}', name: 'show')]
     public function show(Post $post) {
