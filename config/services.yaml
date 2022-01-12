@@ -26,6 +26,7 @@ services:
         resource: '../src/Controller'
         tags: ['controller.service_arguments']
 
+    
     # custom_file_uploader:
     #     class: App\Services\FileUploader
 

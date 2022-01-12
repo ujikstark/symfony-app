@@ -2,36 +2,49 @@ lexik_jwt_authentication:
     secret_key: '%env(resolve:JWT_SECRET_KEY)%'
     public_key: '%env(resolve:JWT_PUBLIC_KEY)%'
     pass_phrase: '%env(JWT_PASSPHRASE)%'
-    token_ttl: 120
-    
-    # token extraction settings
+    token_ttl: 3600
+
     token_extractors:
-        split_cookie:
+        cookie:
             enabled: true
-            cookies:
-                - jwt_hp
-                - jwt_s
+            name: BEARER
 
     set_cookies:
-        jwt_hp:
+        BEARER:
             lifetime: null
-            samesite: strict
-            path: /
+            samesite: 'none'
+            path: '/'
             domain: null
-            httpOnly: false
-            split:
-                - header
-                - payload
-
-        jwt_s:
-            lifetime: 0
-            samesite: strict
-            path: /
-            domain: null
+            secure: true
             httpOnly: true
-            split:
-                - signature
+    
+    # token extraction settings
+    # token_extractors:
+    #     split_cookie:
+    #         enabled: true
+    #         cookies:
+    #             - jwt_hp
+    #             - jwt_s
 
-    # remove the token from the response body when using cookies
-    remove_token_from_body_when_cookies_used: true
+    # set_cookies:
+    #     jwt_hp:
+    #         lifetime: null
+    #         samesite: strict
+    #         path: /
+    #         domain: null
+    #         httpOnly: false
+    #         split:
+    #             - header
+    #             - payload
+
+    #     jwt_s:
+    #         lifetime: 0
+    #         samesite: strict
+    #         path: /
+    #         domain: null
+    #         httpOnly: true
+    #         split:
+    #             - signature
+
+
 
